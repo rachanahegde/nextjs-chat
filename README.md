@@ -1,3 +1,6 @@
+## Note: this is a demo app
+I am using this project to learn how to implement real time chat functionality with socket IO and next JS. 
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
