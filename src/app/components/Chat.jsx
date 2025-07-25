@@ -58,10 +58,10 @@ export default function Chat() {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isOwn: true
       };
-      setMessages(prev => [...prev, newMessage]);
+      
       // Send the message to the server using the 'message' event
       // The server will then broadcast this to all connected clients
-      socketRef.current.emit('message', currentMessage)
+      socketRef.current.emit('message', newMessage) // Send full message object
       setCurrentMessage('');
     }
   };
@@ -99,10 +99,17 @@ export default function Chat() {
     // Listen for incoming messages from server
     // When ANY user sends a message, the server broadcasts it and we receive it here
     socketRef.current.on('message', (msg) => {
-      console.log('Received message:', msg)
+      const isOwn = msg.username === username;
+
+      // Assign fallback id to make sure each message in array has unique id
+      const safeMsg = {
+        ...msg,
+        id: msg.id ?? Date.now() + Math.random(), // fallback unique id
+        isOwn
+      };
       
       // Add the new message to our messages array
-      setMessages((prev) => [...prev, msg])
+      setMessages((prev) => [...prev, safeMsg])
     })
 
     // Cleanup on unmount - disconnection prevents memory leaks
