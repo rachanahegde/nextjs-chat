@@ -8,7 +8,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState('');
   const [isJoined, setIsJoined] = useState(false); // Track if user joined chat
-  const [onlineCount, setOnlineCount] = useState(12);
+  const [onlineCount, setOnlineCount] = useState(0);
   const [isConnected, setIsConnected] = useState(false); // Track if socket is connected
 
   const inputRef = useRef(null);
@@ -35,16 +35,8 @@ export default function Chat() {
   const joinChat = () => {
     if (username.trim()) {
       setIsJoined(true);
-      // Simulate joining message
-      const joinMessage = {
-        id: Date.now(),
-        username: 'System',
-        message: `${username} joined the chat`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isSystem: true
-      };
-      setMessages(prev => [...prev, joinMessage]);
       setOnlineCount(prev => prev + 1);
+      socketRef.current.emit('join', { username });
     }
   };
 
@@ -99,13 +91,11 @@ export default function Chat() {
     // Listen for incoming messages from server
     // When ANY user sends a message, the server broadcasts it and we receive it here
     socketRef.current.on('message', (msg) => {
-      const isOwn = msg.username === username;
-
       // Assign fallback id to make sure each message in array has unique id
       const safeMsg = {
         ...msg,
         id: msg.id ?? Date.now() + Math.random(), // fallback unique id
-        isOwn
+        isOwn: msg.username === username 
       };
       
       // Add the new message to our messages array

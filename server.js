@@ -28,9 +28,21 @@ app.prepare().then(() => {
   // Every time someone opens your website, this event fire
   io.on('connection', (socket) => {
     console.log('user connected')
+    
     socket.on('message', (msg) => {
       io.emit('message', msg) // Broadcast to everyone, including sender
     })
+
+    socket.on('join', ({ username }) => {
+      // Broadcast to all clients
+      io.emit('message', {
+        id: Date.now(),
+        username: 'System',
+        message: `${username} joined the chat`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isSystem: true,
+    });
+
     
     // Optional: Handle disconnection
     socket.on('disconnect', () => {
