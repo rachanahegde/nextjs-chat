@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import io from 'socket.io-client' // Client side socket io library
+import { Send, Users, Hash } from 'lucide-react'; // Icons
 
 export default function Chat() {
   const [messages, setMessages] = useState([]) // Store chat messages in array

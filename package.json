@@ -2,6 +2,7 @@
   "name": "nextjs-chat",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development node server.js",
     "build": "next build",
@@ -11,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
     "daisyui": "^5.0.46",
+    "lucide-react": "^0.525.0",
     "next": "15.4.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",

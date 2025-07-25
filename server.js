@@ -31,12 +31,13 @@ app.prepare().then(() => {
     socket.on('message', (msg) => {
       io.emit('message', msg) // Broadcast to everyone, including sender
     })
+    
+    // Optional: Handle disconnection
+    socket.on('disconnect', () => {
+      console.log('user disconnected')
+    })
   })
 
-  // Optional: Handle disconnection
-  socket.on('disconnect', () => {
-    console.log('user disconnected')
-  })
 
   // Start listening for connections on the specified port
   httpServer.listen(port, () => {
