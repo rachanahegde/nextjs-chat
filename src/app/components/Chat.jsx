@@ -1,33 +1,44 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import io from 'socket.io-client'
+import io from 'socket.io-client' // Client side socket io library
 
 export default function Chat() {
-  const [messages, setMessages] = useState([])
-  const [messageInput, setMessageInput] = useState('')
-  const [isConnected, setIsConnected] = useState(false)
-  const socketRef = useRef(null)
+  const [messages, setMessages] = useState([]) // Store chat messages in array
+  const [messageInput, setMessageInput] = useState('') // Message user is currently typing
+  const [isConnected, setIsConnected] = useState(false) // Track if connected to server
+
+  // Store the socket connection using useRef
+  // useRef persists values across re-renders without causing re-renders
+  // This ensures we keep the same socket connection throughout the component's lifecycle
+  const socketRef = useRef(null) 
 
   useEffect(() => {
-    // Create socket connection once and store it in ref
+    // Create s newocket connection to our server once and store it in ref 
+    // io() connects to the same origin by default (localhost:3000)
     socketRef.current = io()
     
+    // Listen for successful connection to server
     socketRef.current.on('connect', () => {
       console.log('Connected to server')
-      setIsConnected(true)
+      setIsConnected(true) // Update UI to show we're connected
     })
 
+    // Listen for disconnection from server
     socketRef.current.on('disconnect', () => {
       console.log('Disconnected from server')
-      setIsConnected(false)
+      setIsConnected(false) // Update UI to show we're disconnected
     })
 
+    // Listen for incoming messages from server
+    // When ANY user sends a message, the server broadcasts it and we receive it here
     socketRef.current.on('message', (msg) => {
       console.log('Received message:', msg)
+      
+      // Add the new message to our messages array
       setMessages((prev) => [...prev, msg])
     })
 
-    // Cleanup on unmount
+    // Cleanup on unmount - disconnection prevents memory leaks
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect()
@@ -36,8 +47,12 @@ export default function Chat() {
   }, [])
 
   const handleSendMessage = () => {
+    // Check if message isn't empty, socket exists, and we're connected
     if (messageInput.trim() && socketRef.current && isConnected) {
       console.log('Sending message:', messageInput)
+
+      // Send the message to the server using the 'message' event
+      // The server will then broadcast this to all connected clients
       socketRef.current.emit('message', messageInput)
       setMessageInput('')
     }
