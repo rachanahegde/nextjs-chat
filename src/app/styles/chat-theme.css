@@ -1,0 +1,25 @@
+/* Custom chat theme colors */
+.bg-lavender { background-color: #CDB4DB; }
+.bg-pink-light { background-color: #FFC8DD; }
+.bg-pink-medium { background-color: #FFAFCC; }
+.bg-blue-light { background-color: #BDE0FE; }
+.bg-blue-medium { background-color: #A2D2FF; }
+
+.text-lavender { color: #CDB4DB; }
+.text-pink-medium { color: #FFAFCC; }
+.text-blue-medium { color: #A2D2FF; }
+
+.border-lavender { border-color: #CDB4DB; }
+.border-blue-medium { border-color: #A2D2FF; }
+
+.gradient-primary { 
+  background: linear-gradient(135deg, #CDB4DB 0%, #FFC8DD 50%, #FFAFCC 100%); 
+}
+
+.gradient-secondary { 
+  background: linear-gradient(135deg, #BDE0FE 0%, #A2D2FF 100%); 
+}
+
+.hover\:bg-blue-light:hover { 
+  background-color: #BDE0FE; 
+}
